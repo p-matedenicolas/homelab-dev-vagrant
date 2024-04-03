@@ -1,0 +1,20 @@
+
+user: "paulo"
+sshKeyHostPath: "../.ssh/id_rsa.pub"
+sshKeyBoxPath: "/home/vagrant/.ssh/paulo.pub"
+
+machines:
+  bento-debian-server:
+    number      : 1
+    cpu         : 2
+    mem         : 2024
+    box         : bento/debian-12
+    ip_base     : 192.168.1.
+    ip_start    : 21
+  bento-debian-agent:
+    number      : 0
+    cpu         : 2
+    mem         : 512
+    box         : bento/debian-12
+    ip_base     : 192.168.1.
+    ip_start    : 31
