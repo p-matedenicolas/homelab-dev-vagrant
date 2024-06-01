@@ -1,40 +1,46 @@
-
 # Import configuration
-require 'yaml'
+require "yaml"
 
 # Load config.yaml file
-vagrantConfig = YAML.load_file('config.yaml')
-machines = vagrantConfig['machines']
-user = vagrantConfig['user']
-sshKeyHostPath = vagrantConfig['sshKeyHostPath']
-sshKeyBoxPath = vagrantConfig['sshKeyBoxPath']
+vagrantConfig = YAML.load_file("config.yaml")
+machines = vagrantConfig["machines"]
+user = vagrantConfig["user"]
+sshKeyHostPath = vagrantConfig["sshKeyHostPath"]
+sshKeyBoxPath = vagrantConfig["sshKeyBoxPath"]
 
 Vagrant.configure("2") do |config|
+
   # loop machines
   machines.each do |type, typeConfig|
 
     # loop type of machines
-    (1..typeConfig['number']).each do |i|
+    (1..typeConfig["number"]).each do |i|
 
       machineName = "#{type}-#{i}"
-      ipLastSegment = "#{i + typeConfig['ip_start'] - 1}"
-      machineIp = "#{typeConfig['ip_base']}#{ipLastSegment}"
+      ipLastSegment = "#{i + typeConfig["ip_start"] - 1}"
+      machineIp = "#{typeConfig["ip_base"]}#{ipLastSegment}"
+      hdds = typeConfig["hdds"]
 
       # configure machine
       config.vm.define "#{machineName}" do |machine|
 
-        machine.vm.box           = typeConfig['box']
-        if typeConfig.has_key? 'box_version'
-          machine.vm.box_version = typeConfig['box_version']
+        machine.vm.box           = typeConfig["box"]
+        if typeConfig.has_key? "box_version"
+          machine.vm.box_version = typeConfig["box_version"]
         end
         machine.vm.hostname      = "#{machineName}"
-        machine.vm.network "public_network", ip: "#{machineIp}", mac: "#{ipLastSegment}".rjust(12, '0')
+        machine.vm.network "public_network", ip: "#{machineIp}", mac: "#{ipLastSegment}".rjust(12, "0")
         machine.vm.provider "virtualbox" do |vb|
-          vb.memory = "#{typeConfig['mem']}"
-          vb.cpus   = "#{typeConfig['cpu']}"
+          vb.memory = "#{typeConfig["mem"]}"
+          vb.cpus   = "#{typeConfig["cpu"]}"
           vb.name   = "#{machineName}"
           vb.gui    = true
         end
+
+        hdds.each_with_index do |hdd, hddIndex|
+          machine.vm.disk :disk, size: "#{hdd['size']}GB", name: "#{machineName}-#{hddIndex}"
+        end
+
         config.vm.provision "file", source: sshKeyHostPath, destination: sshKeyBoxPath
         machine.vm.provision :shell, :path => "../scripts/setup.sh", :args => [user, sshKeyBoxPath]
       end
