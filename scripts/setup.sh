@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # add user
-useradd -m -U $1 --groups sudo
+useradd -m -U $1 -s /bin/bashsud --groups sudo
 echo "%$1 ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$1
 
 # add ssh key
