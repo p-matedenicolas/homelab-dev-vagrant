@@ -4,7 +4,10 @@ Vagrantfiles used to deploy virtual machines to use as a development homelab
 
 ## Setup
 
-Each lab has their own README file where it's explained how to configure it
+Each provider has their own README file where it's explained how to configure it
+
+Providers:
+- [Virtualbox](virtualbox/README.md)
 
 ## Commands
 
