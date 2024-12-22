@@ -7,6 +7,7 @@ machines = vagrantConfig["machines"]
 user = vagrantConfig["user"]
 sshKeyHostPath = vagrantConfig["sshKeyHostPath"]
 sshKeyBoxPath = vagrantConfig["sshKeyBoxPath"]
+networkType = vagrantConfig["networkType"]
 
 Vagrant.configure("2") do |config|
 
@@ -29,7 +30,7 @@ Vagrant.configure("2") do |config|
           machine.vm.box_version = typeConfig["box_version"]
         end
         machine.vm.hostname      = "#{machineName}"
-        machine.vm.network "public_network", ip: "#{machineIp}", mac: "#{ipLastSegment}".rjust(12, "0")
+        machine.vm.network "#{networkType}", ip: "#{machineIp}"
         machine.vm.provider "virtualbox" do |vb|
           vb.memory = "#{typeConfig["mem"]}"
           vb.cpus   = "#{typeConfig["cpu"]}"
@@ -37,10 +38,12 @@ Vagrant.configure("2") do |config|
           vb.gui    = true
         end
 
+        # add hdds
         hdds.each_with_index do |hdd, hddIndex|
           machine.vm.disk :disk, size: "#{hdd['size']}GB", name: "#{machineName}-#{hddIndex}"
         end
 
+        # add ssh key and run setup script
         config.vm.provision "file", source: sshKeyHostPath, destination: sshKeyBoxPath
         machine.vm.provision :shell, :path => "../scripts/setup.sh", :args => [user, sshKeyBoxPath]
       end

@@ -4,6 +4,8 @@ Vagrantfile used to deploy virtual machines in virtualbox to use as homelab
 
 ## Setup
 
+There is an ssh directory for ease of use, just set the public key there to ssh into the machines
+
 There is an [example config file](config.yaml.example) you can rename to ```config.yaml``` and adapt to your needs
 
 The following variables can be configured
@@ -11,6 +13,7 @@ The following variables can be configured
 - user: name of the user to create in the box
 - sshKeyHostPath: path to the ssh key to copy from the host
 - sshKeyBoxPath: path to the ssh key to copy inside the box
+- networkType: accepts `private_network` and `public_network` for the kind of network to use
 - machines
     - The type and number of machines to be deployed
     - variables:
@@ -20,26 +23,3 @@ The following variables can be configured
         - box: name of the box in [Vagrant Cloud](https://app.vagrantup.com/boxes/search)
         - ip_base: base of the ip to assign to the VM
         - ip_start: this will be the last section of the ip to assign to the VM, it increases with each machine deployed, defined by the number variable
-
-### Example
-```YAML
-user: "paulo"
-sshKeyHostPath: "../.ssh/id_rsa.pub"
-sshKeyBoxPath: "/home/vagrant/.ssh/paulo.pub"
-
-machines:
-  bento-debian-server:
-    number      : 1
-    cpu         : 2
-    mem         : 2024
-    box         : bento/debian-12
-    ip_base     : 192.168.1.
-    ip_start    : 21
-  bento-debian-agent:
-    number      : 0
-    cpu         : 2
-    mem         : 512
-    box         : bento/debian-12
-    ip_base     : 192.168.1.
-    ip_start    : 31
-```
