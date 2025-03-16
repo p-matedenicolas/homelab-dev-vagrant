@@ -2,24 +2,16 @@
 user: "paulo"
 sshKeyHostPath: "../ssh/id_rsa.pub"
 sshKeyBoxPath: "/home/vagrant/.ssh/paulo.pub"
-networkType: "private_network"
+networkType: "public_network"
 
 machines:
   bento-debian-server:
     number        : 1
     cpu           : 2
-    mem           : 2024
+    mem           : 4048
     box           : bento/debian-12
-    ip_base       : 192.168.56.
+    ip_base       : 192.168.1.
     ip_start      : 21
-    hdds:
-      - size: 100
-  bento-debian-agent:
-    number        : 0
-    cpu           : 2
-    mem           : 512
-    box           : bento/debian-12
-    ip_base       : 192.168.56.
-    ip_start      : 31
+    netmask       : 255.255.255.0
     hdds:
       - size: 100

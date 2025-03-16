@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
           machine.vm.box_version = typeConfig["box_version"]
         end
         machine.vm.hostname      = "#{machineName}"
-        machine.vm.network "#{networkType}", ip: "#{machineIp}"
+        machine.vm.network "#{networkType}", ip: "#{machineIp}", netmask: "#{typeConfig["netmask"]}"
         machine.vm.provider "virtualbox" do |vb|
           vb.memory = "#{typeConfig["mem"]}"
           vb.cpus   = "#{typeConfig["cpu"]}"
